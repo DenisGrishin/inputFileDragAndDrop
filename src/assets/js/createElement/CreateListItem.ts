@@ -10,14 +10,14 @@ export default class CreateListItem {
     this.itemListLoad = document.querySelectorAll('.list-load__item')
   }
 
-  createItem = (uploadFileList: FileList) => {
+  createItem = (uploadFileList: any) => {
     if (!this.listLoad || uploadFileList?.length === 0) return
 
     this.listLoad.classList.add('_show')
 
     let idCount = findMaxNumId(this.listLoad.children)
 
-    Array.from(uploadFileList).forEach((file) => {
+    Array.from(uploadFileList).forEach((file: any) => {
       const raeder = new FileReader()
 
       const li = document.createElement('li')
@@ -41,7 +41,7 @@ export default class CreateListItem {
     })
   }
 
-  createInfoAndBtnDel = (file: File, li: HTMLElement) => {
+  createInfoAndBtnDel = (file: any, li: HTMLElement) => {
     const { name, size } = file
 
     const nameAndType = name.split('.')
