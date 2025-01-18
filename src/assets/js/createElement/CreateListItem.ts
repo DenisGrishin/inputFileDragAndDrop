@@ -1,9 +1,9 @@
 import { findMaxNumId } from '../common/functions.ts'
 
 export default class CreateListItem {
-  protected fileInput: HTMLInputElement | null
-  protected listLoad: HTMLElement | null
-  protected itemListLoad: NodeListOf<HTMLElement>
+  fileInput: HTMLInputElement | null
+  listLoad: HTMLElement | null
+  itemListLoad: NodeListOf<HTMLElement>
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
     this.listLoad = document.querySelector('.list-load')

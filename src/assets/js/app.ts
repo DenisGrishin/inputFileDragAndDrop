@@ -1,7 +1,8 @@
 import '../style/style.scss'
 
-import CreateListItem from './createElement/CreateListItem.ts'
 import ValidateFiles from './validateFile/mainValidateFile.ts'
+import { Toast } from './createElement/toast'
+import CreateListItem from './createElement/CreateListItem.ts'
 
 export default class FileInput {
   protected fileInput: HTMLInputElement | null
@@ -9,6 +10,7 @@ export default class FileInput {
   protected uploadFileList: FileList | null
   protected CreateListItem: CreateListItem
   protected ValidateFiles: ValidateFiles
+  protected toast: Toast
   protected itemListLoad: NodeListOf<HTMLElement>
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
@@ -17,6 +19,7 @@ export default class FileInput {
     this.uploadFileList = null
     this.CreateListItem = new CreateListItem()
     this.ValidateFiles = new ValidateFiles()
+    this.toast = new Toast()
   }
 
   initInputFile = () => {
@@ -31,12 +34,14 @@ export default class FileInput {
     if (target.files) {
       this.uploadFileList = target.files
 
-      const files = this.ValidateFiles.initValidate(
+      const [files, errors] = this.ValidateFiles.initValidate(
         Array.from(target.files),
         this.listLoad,
       )
 
       this.CreateListItem.createItem(files)
+
+      this.toast.createToast(errors)
     }
   }
 }

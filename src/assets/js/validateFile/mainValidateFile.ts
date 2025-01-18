@@ -1,28 +1,34 @@
+import { Toast } from '../createElement/toast'
+
 export default class ValidateFiles {
+  errors: string[] = []
+
   initValidate = (files: any, listLoad: HTMLElement) => {
     if (files.length === 0) return []
 
     const newFilesLenght = this.validateLengthFiles(files, listLoad)
-    if (newFilesLenght.length === 0) return []
+
+    if (newFilesLenght.length === 0) return [[], this.errors]
 
     const newFilesSize = this.validateSizeFiles(newFilesLenght)
-    if (newFilesSize.length === 0) return []
 
-    return this.validateTypeFiles(newFilesSize)
+    if (newFilesSize.length === 0) return [[], this.errors]
+
+    const newFileTupe = this.validateTypeFiles(newFilesSize)
+
+    if (newFileTupe.length === 0) return [[], this.errors]
+
+    return [newFileTupe, this.errors]
   }
 
   validateLengthFiles = (files: any, listLoad: HTMLElement) => {
     const maxLength = 5
 
     if (listLoad.children.length + files.length >= maxLength + 1) {
-      alert(
+      this.errors.push(
         '<b>Ошибка:</b> Превышено допустимое количество изображений: максимум 5.',
       )
-      // addTextToast(
-      //   '<b>Ошибка:</b> Превышено допустимое количество изображений: максимум 5.',
-      // )
     }
-
     if (listLoad.children.length === 0) {
       return files.length <= 5 ? files : files.slice(0, maxLength)
     }
@@ -44,12 +50,10 @@ export default class ValidateFiles {
     const newFiles = files
       .map((file: any) => {
         if (nameLoadFiles.includes(file.name)) {
-          alert(
-            `<b>Ошибка:</b> Изображение с таким ${file.name} именем уже существует.`,
+          this.errors.push(
+            `<b>Ошибка:</b> Изображение с таким <b>${file.name}</b>  именем уже существует.`,
           )
-          // addTextToast(
-          //   `<b>Ошибка:</b> Изображение с таким ${file.name} именем уже существует.`,
-          // )
+
           return undefined
         }
         return file
@@ -66,19 +70,18 @@ export default class ValidateFiles {
         if (file.size < maxSizeBytes) {
           return file
         }
-        alert(
-          `<b>Ошибка:</b> Файл "${file.name}" не загружен: превышен размер изображения.`,
+
+        this.errors.push(
+          `<b>Ошибка:</b> Файл <b>"${file.name}"</b>  не загружен: превышен размер изображения.`,
         )
-        // addTextToast(
-        //   `<b>Ошибка:</b> Файл "${file.name}" не загружен: превышен размер изображения.`,
-        // )
+
         return undefined
       })
       .filter((it: any) => it !== undefined)
 
     return newFiles
   }
-  // переписать
+
   validateTypeFiles = (files: any) => {
     const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png']
 
@@ -87,12 +90,9 @@ export default class ValidateFiles {
         if (allowedTypes.includes(file.type)) {
           return file
         }
-        alert(
+        this.errors.push(
           '<b>Ошибка:</b> Неверный формат файла. Разрешены только JPG,JPEG, PNG.',
         )
-        // addTextToast(
-        //   '<b>Ошибка:</b> Неверный формат файла. Разрешены только JPG,JPEG, PNG.',
-        // )
 
         return undefined
       })
