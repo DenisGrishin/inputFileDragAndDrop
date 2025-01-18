@@ -1,16 +1,3 @@
-// const mainValidate = (files, loadFile) => {
-//   const newFilesLenght = validateLengthFiles(files, loadFile)
-
-//   if (newFilesLenght.length === 0) return []
-
-//   const newFilesSize = validateSizeFiles(newFilesLenght)
-
-//   if (newFilesSize.length === 0) return []
-
-//   return validateTypeFiles(newFilesSize)
-// }
-// export default mainValidate
-
 export default class ValidateFiles {
   initValidate = (files: any, listLoad: HTMLElement) => {
     if (files.length === 0) return []
@@ -93,14 +80,11 @@ export default class ValidateFiles {
   }
   // переписать
   validateTypeFiles = (files: any) => {
-    const allowedTypes = ['jpg', 'jpeg', 'png']
+    const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png']
 
     const newFiles = files
       .map((file: any) => {
-        const indexSymbol = file.type.lastIndexOf('/')
-        const nameType = file.type.slice(indexSymbol + 1)
-
-        if (allowedTypes.includes(nameType)) {
+        if (allowedTypes.includes(file.type)) {
           return file
         }
         alert(
