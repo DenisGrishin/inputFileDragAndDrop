@@ -1,18 +1,10 @@
-<!doctype html>
-<html lang="en">
+const createDom = () => {
+  const root = document.getElementById('root');
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    Input file + DnD
-  </title>
-</head>
-
-<body>
-  <div id="root">
-    <div class="upload-file">
+  if (root) {
+    root.insertAdjacentHTML(
+      'beforeend',
+      `   <div class="upload-file">
       <div class="upload-file__container">
         <form class="upload-file__form ">
           <div class="upload-file__wrapper-input">
@@ -42,9 +34,8 @@
         <ul class="upload-file__list list-load"></ul>
       </div>
     </div>
-  </div>
-  <div class="toast"></div>
-  <script type="module" src="./src/assets/js/app.ts"></script>
-</body>
-
-</html>
+    <div class="toast"></div>`
+    );
+  }
+};
+export default createDom;
