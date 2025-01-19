@@ -6,6 +6,7 @@ import CreateListItem from './createElement/CreateListItem.ts'
 import { RemoveListItem } from './createElement/removeListItem.ts'
 import { HandleSubmit } from './handle/handleSubmit.ts'
 import { HandeleListDragAdnDrop } from './handle/handeleListDragAdnDrop.ts'
+import { UploadDragAndDrop } from './handle/uploadDragAndDrop.ts'
 
 export default class FileInput {
   fileInput: HTMLInputElement | null
@@ -18,6 +19,7 @@ export default class FileInput {
   removeListItem: RemoveListItem
   handleSubmit: HandleSubmit
   handeleListDragAdnDrop: HandeleListDragAdnDrop
+  uploadDragAndDrop: UploadDragAndDrop
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
     this.listLoad = document.querySelector('.list-load')
@@ -29,6 +31,7 @@ export default class FileInput {
     this.removeListItem = new RemoveListItem()
     this.handleSubmit = new HandleSubmit()
     this.handeleListDragAdnDrop = new HandeleListDragAdnDrop()
+    this.uploadDragAndDrop = new UploadDragAndDrop()
   }
 
   initInputFile = () => {
@@ -40,6 +43,7 @@ export default class FileInput {
 
     this.handleSubmit.sendFile()
     this.handeleListDragAdnDrop.initHandeleListDragAdnDrop()
+    this.uploadDragAndDrop.initUploadDragAndDrop()
   }
 
   handleUploadFile = (event: Event) => {

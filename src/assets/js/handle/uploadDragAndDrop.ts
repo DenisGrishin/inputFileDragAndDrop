@@ -1,42 +1,55 @@
-// import createListLoadItem from '../createElement/createListLoadItem';
-// import mainValidate from '../validateFile/mainValidateFile';
+import ValidateFiles from '../validateFile/mainValidateFile'
+import CreateListItem from '../createElement/CreateListItem'
+import { Toast } from '../createElement/toast'
 
-// import { showToast } from '../common/showToast';
+export class UploadDragAndDrop {
+  root: HTMLElement | null = document.getElementById('root')
+  ValidateFiles: ValidateFiles = new ValidateFiles()
+  CreateListItem: CreateListItem = new CreateListItem()
+  toast: Toast = new Toast()
+  listLoad = document.querySelector('.list-load')
+  initUploadDragAndDrop = () => {
+    // когда файл находится в окно браузера, добавляем класс
+    this.root?.addEventListener('dragover', this.handleFileDragOver, false)
+    // когда файл не находится в окно браузера, удаляем класс
+    this.root?.addEventListener('dragleave', this.handleFileDragLeave, false)
+    // отпускаем файл над зоной загрузки
+    this.root?.addEventListener('drop', this.handleFileDrop, false)
+  }
 
-// const root = document.getElementById('root');
+  handleFileDragLeave = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
 
-// export const handleFileDragOver = (e) => {
-//   e.preventDefault();
-//   e.stopPropagation();
+    this.root?.classList.remove('_active')
+  }
+  handleFileDrop = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.root?.classList.remove('_active')
+    const draggedFile = e.dataTransfer
+    const { files } = draggedFile
+    debugger
+    // const newFiles = mainValidate(Array.from(files), listLoadFile)
+    // createListLoadItem(newFiles, listLoadFile)
+    // showToast()
 
-//   document.getElementById('root').classList.add('_active');
-// };
+    if (this.listLoad) {
+      const [newFiles, errors] = this.ValidateFiles.initValidate(
+        Array.from(files),
+        this.listLoad,
+      )
 
-// export const uploadDragAndDrop = (listLoadFile) => {
-//   if (!root) return;
+      this.CreateListItem.createItem(newFiles)
 
-//   const handleFileDragLeave = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
+      this.toast.createToast(errors)
+    }
+  }
 
-//     root.classList.remove('_active');
-//   };
-//   const handleFileDrop = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     root.classList.remove('_active');
-//     const draggedFile = e.dataTransfer;
-//     const { files } = draggedFile;
+  handleFileDragOver = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
 
-//     const newFiles = mainValidate(Array.from(files), listLoadFile);
-//     createListLoadItem(newFiles, listLoadFile);
-//     showToast();
-//   };
-
-//   // когда файл находится в окно браузера, добавляем класс
-//   root.addEventListener('dragover', handleFileDragOver, false);
-//   // когда файл не находится в окно браузера, удаляем класс
-//   root.addEventListener('dragleave', handleFileDragLeave, false);
-//   // отпускаем файл над зоной загрузки
-//   root.addEventListener('drop', handleFileDrop, false);
-// };
+    this.root?.classList.add('_active')
+  }
+}
