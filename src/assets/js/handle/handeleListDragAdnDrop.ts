@@ -1,9 +1,9 @@
 import CreateListItem from '../createElement/CreateListItem.ts'
-// import { handleFileDragOver } from './uploadDragAndDrop.ts'
+import { UploadDragAndDrop } from './uploadDragAndDrop.ts'
 
 export class HandeleListDragAdnDrop extends CreateListItem {
   root: HTMLElement | null = document.getElementById('root')
-
+  uploadDragAndDrop: UploadDragAndDrop = new UploadDragAndDrop()
   initHandeleListDragAdnDrop = () => {
     //  события когда элемент находиться над другим
     this.listLoad?.addEventListener('dragover', this.handleDragOver)
@@ -41,11 +41,18 @@ export class HandeleListDragAdnDrop extends CreateListItem {
   handleDragEnd = (e: any) => {
     e.target.classList.remove('_chosen')
     if (!this.root) return
-    this.root.addEventListener('dragover', handleFileDragOver, false)
+    this.root.addEventListener(
+      'dragover',
+      this.uploadDragAndDrop.handleFileDragOver,
+      false,
+    )
   }
   handleDragStart = (e: any) => {
     e.target.classList.add('_chosen')
     if (!this.root) return
-    this.root.removeEventListener('dragover', handleFileDragOver)
+    this.root.removeEventListener(
+      'dragover',
+      this.uploadDragAndDrop.handleFileDragOver,
+    )
   }
 }
