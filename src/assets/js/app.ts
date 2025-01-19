@@ -3,15 +3,19 @@ import '../style/style.scss'
 import ValidateFiles from './validateFile/mainValidateFile.ts'
 import { Toast } from './createElement/toast'
 import CreateListItem from './createElement/CreateListItem.ts'
+import { RemoveListItem } from './createElement/removeListItem.ts'
+import { HandleSubmit } from './handle/handleSubmit.ts'
 
 export default class FileInput {
-  protected fileInput: HTMLInputElement | null
-  protected listLoad: HTMLElement | null
-  protected uploadFileList: FileList | null
-  protected CreateListItem: CreateListItem
-  protected ValidateFiles: ValidateFiles
-  protected toast: Toast
-  protected itemListLoad: NodeListOf<HTMLElement>
+  fileInput: HTMLInputElement | null
+  listLoad: HTMLElement | null
+  itemListLoad: NodeListOf<HTMLElement>
+  uploadFileList: FileList | null
+  CreateListItem: CreateListItem
+  ValidateFiles: ValidateFiles
+  toast: Toast
+  removeListItem: RemoveListItem
+  handleSubmit: HandleSubmit
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
     this.listLoad = document.querySelector('.list-load')
@@ -20,12 +24,18 @@ export default class FileInput {
     this.CreateListItem = new CreateListItem()
     this.ValidateFiles = new ValidateFiles()
     this.toast = new Toast()
+    this.removeListItem = new RemoveListItem()
+    this.handleSubmit = new HandleSubmit()
   }
 
   initInputFile = () => {
     if (this.fileInput) {
       this.fileInput.addEventListener('change', this.handleUploadFile)
     }
+
+    this.removeListItem.reomoveListLoadItem()
+
+    this.handleSubmit.sendFile()
   }
 
   handleUploadFile = (event: Event) => {
@@ -34,14 +44,16 @@ export default class FileInput {
     if (target.files) {
       this.uploadFileList = target.files
 
-      const [files, errors] = this.ValidateFiles.initValidate(
-        Array.from(target.files),
-        this.listLoad,
-      )
+      if (this.listLoad) {
+        const [files, errors] = this.ValidateFiles.initValidate(
+          Array.from(target.files),
+          this.listLoad,
+        )
 
-      this.CreateListItem.createItem(files)
+        this.CreateListItem.createItem(files)
 
-      this.toast.createToast(errors)
+        this.toast.createToast(errors)
+      }
     }
   }
 }
@@ -50,3 +62,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = new FileInput()
   fileInput.initInputFile()
 })
+// ! 1. сдлеать  чтоб список сам создавасял загрженных файлов
+// ! 2. Сортировка файла на почту
