@@ -10,29 +10,28 @@ export class UploadDragAndDrop {
   listLoad = document.querySelector('.list-load')
   initUploadDragAndDrop = () => {
     // когда файл находится в окно браузера, добавляем класс
-    this.root?.addEventListener('dragover', this.handleFileDragOver, false)
+    document.body.addEventListener('dragover', this.handleFileDragOver, false)
     // когда файл не находится в окно браузера, удаляем класс
-    this.root?.addEventListener('dragleave', this.handleFileDragLeave, false)
+    document.body.addEventListener('dragleave', this.handleFileDragLeave, false)
     // отпускаем файл над зоной загрузки
-    this.root?.addEventListener('drop', this.handleFileDrop, false)
+    document.body.addEventListener('drop', this.handleFileDrop, false)
   }
 
   handleFileDragLeave = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
 
-    this.root?.classList.remove('_active')
+    if (e.relatedTarget === null) {
+      document.body.classList.remove('_active')
+    }
   }
   handleFileDrop = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
-    this.root?.classList.remove('_active')
+
+    document.body.classList.remove('_active')
     const draggedFile = e.dataTransfer
     const { files } = draggedFile
-    debugger
-    // const newFiles = mainValidate(Array.from(files), listLoadFile)
-    // createListLoadItem(newFiles, listLoadFile)
-    // showToast()
 
     if (this.listLoad) {
       const [newFiles, errors] = this.ValidateFiles.initValidate(
@@ -49,7 +48,9 @@ export class UploadDragAndDrop {
   handleFileDragOver = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
-
-    this.root?.classList.add('_active')
+    const draggedElement = e.dataTransfer?.items[0]
+    if (draggedElement) {
+      document.body.classList.add('_active')
+    }
   }
 }

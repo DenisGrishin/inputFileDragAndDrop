@@ -4,6 +4,7 @@ import { UploadDragAndDrop } from './uploadDragAndDrop.ts'
 export class HandeleListDragAdnDrop extends CreateListItem {
   root: HTMLElement | null = document.getElementById('root')
   uploadDragAndDrop: UploadDragAndDrop = new UploadDragAndDrop()
+
   initHandeleListDragAdnDrop = () => {
     //  события когда элемент находиться над другим
     this.listLoad?.addEventListener('dragover', this.handleDragOver)
@@ -18,7 +19,7 @@ export class HandeleListDragAdnDrop extends CreateListItem {
 
     const activeElement = this.listLoad?.querySelector('._chosen')
 
-    if (this.root) this.root.classList.remove('_active')
+    if (this.root) document.body.classList.remove('_active')
     if (!activeElement) return
 
     const currentElement = e.target
@@ -49,10 +50,5 @@ export class HandeleListDragAdnDrop extends CreateListItem {
   }
   handleDragStart = (e: any) => {
     e.target.classList.add('_chosen')
-    if (!this.root) return
-    this.root.removeEventListener(
-      'dragover',
-      this.uploadDragAndDrop.handleFileDragOver,
-    )
   }
 }
