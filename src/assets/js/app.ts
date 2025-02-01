@@ -8,30 +8,47 @@ import { HandleSubmit } from './handle/handleSubmit.ts'
 
 import { UploadDragAndDrop } from './handle/uploadDragAndDrop.ts'
 
+type typeObjProps = {
+  inputSelector: string
+  fileListSelector: string
+  handelDragAndDrop: {
+    isDragAndDropEnabled: boolean
+    dropZoneSelector: string
+  }
+}
+
 export default class FileInput {
+  // парметры инпута
   fileInput: HTMLInputElement | null
   listLoad: HTMLElement | null
-  itemListLoad: NodeListOf<HTMLElement>
+  isDragAndDropEnabled = false
+  dropZoneSelector = 'body'
+  // =====
   uploadFileList: FileList | null
   CreateListItem: CreateListItem
   ValidateFiles: ValidateFiles
   toast: Toast
   removeListItem: RemoveListItem
-  handleSubmit: HandleSubmit
-
   uploadDragAndDrop: UploadDragAndDrop
-  constructor() {
-    this.fileInput = document.getElementById('file-input') as HTMLInputElement
-    this.listLoad = document.querySelector('.list-load')
-    this.itemListLoad = document.querySelectorAll('.list-load li')
+  constructor(objProps: typeObjProps) {
+    // парметры инпута
+    this.fileInput = document.querySelector(
+      objProps.inputSelector,
+    ) as HTMLInputElement
+    this.listLoad = document.querySelector(objProps.fileListSelector)
+    this.isDragAndDropEnabled = objProps.handelDragAndDrop.isDragAndDropEnabled
+    this.dropZoneSelector = objProps.handelDragAndDrop.dropZoneSelector
+    // =====
     this.uploadFileList = null
     this.CreateListItem = new CreateListItem()
     this.ValidateFiles = new ValidateFiles()
     this.toast = new Toast()
     this.removeListItem = new RemoveListItem()
-    this.handleSubmit = new HandleSubmit()
 
-    this.uploadDragAndDrop = new UploadDragAndDrop()
+    this.uploadDragAndDrop = new UploadDragAndDrop(
+      this.listLoad,
+      this.dropZoneSelector,
+    )
   }
 
   initInputFile = () => {
@@ -40,10 +57,9 @@ export default class FileInput {
     }
 
     this.removeListItem.reomoveListLoadItem()
-
-    this.handleSubmit.sendFile()
-
-    this.uploadDragAndDrop.initUploadDragAndDrop()
+    if (this.isDragAndDropEnabled) {
+      this.uploadDragAndDrop.initUploadDragAndDrop()
+    }
   }
 
   handleUploadFile = (event: Event) => {
@@ -67,6 +83,18 @@ export default class FileInput {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = new FileInput()
+  const fileInput = new FileInput({
+    inputSelector: '#file-input',
+    fileListSelector: '.list-load',
+    handelDragAndDrop: {
+      isDragAndDropEnabled: true,
+      dropZoneSelector: 'body',
+    },
+  })
   fileInput.initInputFile()
 })
+//  делаем универсальный селктор
+// 1. пердача элемент инпута чтоб свой протсовить слектор
+// 2. слектор спсика файлов котрый заргузили
+// 3. загрузка файла по DnD отключить включить
+// 4.задать dropZone по дефолту стоит на body(весь экран)

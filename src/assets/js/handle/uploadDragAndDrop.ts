@@ -3,35 +3,50 @@ import CreateListItem from '../createElement/CreateListItem'
 import { Toast } from '../createElement/toast'
 
 export class UploadDragAndDrop {
-  root: HTMLElement | null = document.getElementById('root')
   ValidateFiles: ValidateFiles = new ValidateFiles()
   CreateListItem: CreateListItem = new CreateListItem()
   toast: Toast = new Toast()
-  listLoad = document.querySelector('.list-load')
+  listLoad: HTMLElement | null
+  dropZone: HTMLElement | null
+  constructor(listLoad: HTMLElement | null, dropZoneSelector: string) {
+    this.listLoad = listLoad
+    this.dropZone = document.querySelector(dropZoneSelector) as HTMLElement
+  }
+
   initUploadDragAndDrop = () => {
-    // когда файл находится в окно браузера, добавляем класс
-    document.body.addEventListener('dragover', this.handleFileDragOver, false)
-    // когда файл не находится в окно браузера, удаляем класс
-    document.body.addEventListener('dragleave', this.handleFileDragLeave, false)
-    // отпускаем файл над зоной загрузки
-    document.body.addEventListener('drop', this.handleFileDrop, false)
+    if (this.dropZone) {
+      // когда файл находится в окно браузера, добавляем класс
+      this.dropZone.addEventListener('dragover', this.handleFileDragOver, false)
+      // когда файл не находится в окно браузера, удаляем класс
+      this.dropZone.addEventListener(
+        'dragleave',
+        this.handleFileDragLeave,
+        false,
+      )
+      // отпускаем файл над зоной загрузки
+      this.dropZone.addEventListener('drop', this.handleFileDrop, false)
+    }
   }
 
   handleFileDragLeave = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
+    console.log(e.relatedTarget)
+
+    if (!this.dropZone) return
     if (e.relatedTarget === null) {
-      document.body.classList.remove('_active')
+      this.dropZone.classList.remove('_active')
     }
   }
   handleFileDrop = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-
-    document.body.classList.remove('_active')
     const draggedFile = e.dataTransfer
-    if (!draggedFile) return
+
+    if (!this.dropZone || !draggedFile) return
+
+    this.dropZone.classList.remove('_active')
 
     const { files } = draggedFile
 
@@ -51,8 +66,8 @@ export class UploadDragAndDrop {
     e.preventDefault()
     e.stopPropagation()
     const draggedElement = e.dataTransfer?.items[0]
-    if (draggedElement) {
-      document.body.classList.add('_active')
+    if (this.dropZone && draggedElement) {
+      this.dropZone.classList.add('_active')
     }
   }
 }
