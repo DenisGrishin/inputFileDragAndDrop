@@ -3,7 +3,7 @@ import { Toast } from '../createElement/toast'
 export default class ValidateFiles {
   errors: string[] = []
 
-  initValidate = (files: any, listLoad: HTMLElement) => {
+  initValidate = (files: any, listLoad: HTMLElement | Element) => {
     if (files.length === 0) return []
 
     const newFilesLenght = this.validateLengthFiles(files, listLoad)
@@ -21,7 +21,7 @@ export default class ValidateFiles {
     return [newFileTupe, this.errors]
   }
 
-  validateLengthFiles = (files: any, listLoad: HTMLElement) => {
+  validateLengthFiles = (files: any, listLoad: HTMLElement | Element) => {
     const maxLength = 5
 
     if (listLoad.children.length + files.length >= maxLength + 1) {
@@ -38,7 +38,7 @@ export default class ValidateFiles {
     return noRepeatNameFiles.slice(0, maxLength - listLoad.children.length)
   }
 
-  valideteRepeatNameFile = (files: any, loadFile: HTMLElement) => {
+  valideteRepeatNameFile = (files: any, loadFile: HTMLElement | Element) => {
     // собираем массив имен файлов уже загруженных в инпут
     const nameLoadFiles = Array.from(loadFile.querySelectorAll('li')).map(
       (item) => {

@@ -17,7 +17,7 @@ export class UploadDragAndDrop {
     document.body.addEventListener('drop', this.handleFileDrop, false)
   }
 
-  handleFileDragLeave = (e: any) => {
+  handleFileDragLeave = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -25,15 +25,17 @@ export class UploadDragAndDrop {
       document.body.classList.remove('_active')
     }
   }
-  handleFileDrop = (e: any) => {
+  handleFileDrop = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
     document.body.classList.remove('_active')
     const draggedFile = e.dataTransfer
+    if (!draggedFile) return
+
     const { files } = draggedFile
 
-    if (this.listLoad) {
+    if (this.listLoad && files.length !== 0) {
       const [newFiles, errors] = this.ValidateFiles.initValidate(
         Array.from(files),
         this.listLoad,
@@ -45,7 +47,7 @@ export class UploadDragAndDrop {
     }
   }
 
-  handleFileDragOver = (e: any) => {
+  handleFileDragOver = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     const draggedElement = e.dataTransfer?.items[0]

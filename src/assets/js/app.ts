@@ -5,7 +5,7 @@ import { Toast } from './createElement/toast'
 import CreateListItem from './createElement/CreateListItem.ts'
 import { RemoveListItem } from './createElement/removeListItem.ts'
 import { HandleSubmit } from './handle/handleSubmit.ts'
-import { HandeleListDragAdnDrop } from './handle/handeleListDragAdnDrop.ts'
+
 import { UploadDragAndDrop } from './handle/uploadDragAndDrop.ts'
 
 export default class FileInput {
@@ -18,7 +18,7 @@ export default class FileInput {
   toast: Toast
   removeListItem: RemoveListItem
   handleSubmit: HandleSubmit
-  handeleListDragAdnDrop: HandeleListDragAdnDrop
+
   uploadDragAndDrop: UploadDragAndDrop
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
@@ -30,7 +30,7 @@ export default class FileInput {
     this.toast = new Toast()
     this.removeListItem = new RemoveListItem()
     this.handleSubmit = new HandleSubmit()
-    this.handeleListDragAdnDrop = new HandeleListDragAdnDrop()
+
     this.uploadDragAndDrop = new UploadDragAndDrop()
   }
 
@@ -42,7 +42,7 @@ export default class FileInput {
     this.removeListItem.reomoveListLoadItem()
 
     this.handleSubmit.sendFile()
-    this.handeleListDragAdnDrop.initHandeleListDragAdnDrop()
+
     this.uploadDragAndDrop.initUploadDragAndDrop()
   }
 
@@ -70,5 +70,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = new FileInput()
   fileInput.initInputFile()
 })
-// ! 1. сдлеать  чтоб список сам создавасял загрженных файлов
-// ! 2. Сортировка файла на почту

@@ -154,7 +154,7 @@
 		align-items: center;
 		gap: 24px;
 		position: relative;
-		cursor: move;
+
 		@media (max-width: $mobile) {
 			display: flex;
 			flex-direction: column;

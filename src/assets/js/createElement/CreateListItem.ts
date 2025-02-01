@@ -4,6 +4,7 @@ export default class CreateListItem {
   fileInput: HTMLInputElement | null
   listLoad: HTMLElement | null
   itemListLoad: NodeListOf<HTMLElement>
+
   constructor() {
     this.fileInput = document.getElementById('file-input') as HTMLInputElement
     this.listLoad = document.querySelector('.list-load')
@@ -11,7 +12,8 @@ export default class CreateListItem {
   }
 
   createItem = (uploadFileList: any) => {
-    if (!this.listLoad || uploadFileList?.length === 0) return
+    if (!this.listLoad || uploadFileList?.length === 0 || !uploadFileList)
+      return
 
     this.listLoad.classList.add('_show')
 
@@ -21,7 +23,6 @@ export default class CreateListItem {
       const raeder = new FileReader()
 
       const li = document.createElement('li')
-      li.draggable = true
       li.id = `loadFile-${(idCount += 1)}`
       li.classList.add('list-load__item')
       const img = document.createElement('img')
@@ -37,6 +38,7 @@ export default class CreateListItem {
 
       this.createInfoAndBtnDel(file, li)
       this.listLoad?.appendChild(li)
+
       raeder.readAsDataURL(file)
     })
   }
