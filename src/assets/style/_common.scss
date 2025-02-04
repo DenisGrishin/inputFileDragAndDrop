@@ -25,8 +25,10 @@
 .toast {
 	position: fixed;
 	right: 30px;
-	bottom: 50px;
-
+	top: 10px;
+	overflow-y: auto;
+	height: 100%;
+	padding-right: 10px;
 	// .toast__item
 
 	&__item {
@@ -49,6 +51,7 @@
 		border-radius: 8px;
 		position: relative;
 		background-color: #fff;
+
 		&::before {
 			content: "";
 			background: url("../image/icon/error.svg") 0 0 no-repeat;
@@ -59,16 +62,6 @@
 			display: inline-block;
 		}
 
-		&::after {
-			content: "";
-			position: absolute;
-			width: 280px;
-			height: 3px;
-			background-color: #e63946;
-			bottom: 0;
-			left: 0;
-			transition: width 10.3s ease-out 0s;
-		}
 		&._success {
 			&::before {
 				content: "";
@@ -79,6 +72,18 @@
 			}
 		}
 		&._lineProgress::after {
+			width: 0px;
+		}
+	}
+	&__progress-row {
+		position: absolute;
+		width: 280px;
+		height: 3px;
+		background-color: #e63946;
+		bottom: 0;
+		left: 0;
+		transition: width 10.3s ease-out 0s;
+		&._startProgress {
 			width: 0px;
 		}
 	}

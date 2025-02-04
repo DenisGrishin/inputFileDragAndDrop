@@ -13,8 +13,8 @@ export default class FileInput {
   // парметры инпута
   fileInput: HTMLInputElement | null
   listLoad: HTMLElement | null
-  isDragAndDropEnabled = false
-  dropZoneSelector = 'body'
+
+  dropZoneSelector: string | undefined
   fileValidationRules: fileValidationRules | undefined
   // =====
   uploadFileList: FileList | null
@@ -29,8 +29,8 @@ export default class FileInput {
       objProps.inputSelector,
     ) as HTMLInputElement
     this.listLoad = document.querySelector(objProps.fileListSelector)
-    this.isDragAndDropEnabled = objProps.handelDragAndDrop.isDragAndDropEnabled
-    this.dropZoneSelector = objProps.handelDragAndDrop.dropZoneSelector
+
+    this.dropZoneSelector = objProps.dropZoneSelector
     this.fileValidationRules = objProps.fileValidationRules
     // =====
     this.uploadFileList = null
@@ -38,7 +38,6 @@ export default class FileInput {
     this.ValidateFiles = new ValidateFiles(this.fileValidationRules)
     this.toast = new Toast()
     this.removeListItem = new RemoveListItem()
-
     this.uploadDragAndDrop = new UploadDragAndDrop(
       this.listLoad,
       this.dropZoneSelector,
@@ -52,7 +51,7 @@ export default class FileInput {
     }
 
     this.removeListItem.reomoveListLoadItem()
-    if (this.isDragAndDropEnabled) {
+    if (this.dropZoneSelector) {
       this.uploadDragAndDrop.initUploadDragAndDrop()
     }
   }
@@ -83,19 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = new FileInput({
     inputSelector: '#file-input',
     fileListSelector: '.list-load',
-    handelDragAndDrop: {
-      isDragAndDropEnabled: true,
-      dropZoneSelector: '.upload-file__wrapper-input',
-    },
+    dropZoneSelector: '.upload-file__wrapper-input',
     fileValidationRules: {
       type: ['image/jpg', 'image/jpeg', 'image/png'],
       isNameDuplicate: true,
       max: 3,
       size: 3.5,
     },
+    // toast: {},
   })
   fileInput.initInputFile()
 })
+// ! add HandleSubmit
 //  делаем универсальный селктор
 // 1. пердача элемент инпута чтоб свой протсовить слектор
 // 2. слектор спсика файлов котрый заргузили
@@ -107,4 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // 3.валидация по размеру, указывать в мб где 0,1 это 100кб
 // 4.валидация по вторению имени
 // сдлеать чтоб можно бло задвать тостом свои текста
+// 1. сдлеать саксес линию прогреса
+// 2. установливать таймер
 // сдеалть чтоб списку более универсальный

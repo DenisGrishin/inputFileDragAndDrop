@@ -1,6 +1,5 @@
 import { RemoveListItem } from '../createElement/removeListItem'
 import { Toast } from '../createElement/toast'
-import { HandeleListDragAdnDrop } from './handeleListDragAdnDrop'
 
 export class HandleSubmit {
   fileInput: HTMLInputElement | null
@@ -23,8 +22,6 @@ export class HandleSubmit {
       form.addEventListener('submit', (event) => {
         event.preventDefault()
         if (!fileInput.files) return
-
-        this.sortFile(fileInput, listLoad)
 
         const formData = new FormData()
 
@@ -77,29 +74,5 @@ export class HandleSubmit {
 
       this.toast.createToast(['Отправлено успешно.'], true)
     }, 1000)
-  }
-
-  sortFile = (fileInput: HTMLInputElement, listLoadFile: HTMLElement) => {
-    const files = Array.from(fileInput.files)
-    if (files.length === 0) return
-    const arrLoadName = Array.from(listLoadFile.children).map((it) => {
-      const name = it.querySelector('li span[data-name]') as HTMLElement
-      if (name) {
-        return name.dataset.name
-      }
-    })
-    const newFile = files.map((element, indx) =>
-      files.filter((it) => it.name === arrLoadName[indx]).pop(),
-    )
-
-    const dataTransfer = new DataTransfer()
-
-    newFile.forEach((file) => {
-      if (file) {
-        dataTransfer.items.add(file)
-      }
-    })
-
-    fileInput.files = dataTransfer.files
   }
 }

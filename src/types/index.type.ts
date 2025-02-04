@@ -2,10 +2,7 @@ export interface FileList {}
 export type typeObjProps = {
   inputSelector: string
   fileListSelector: string
-  handelDragAndDrop: {
-    isDragAndDropEnabled: boolean
-    dropZoneSelector: string
-  }
+  dropZoneSelector?: string
   fileValidationRules?: fileValidationRules
 }
 export type fileValidationRules = {

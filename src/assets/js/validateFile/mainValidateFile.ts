@@ -8,7 +8,7 @@ export default class ValidateFiles {
   }
   initValidate = (files: any, listLoad: HTMLElement | Element) => {
     if (files.length === 0) return []
-
+    this.errors = []
     const newFilesLenght = this.fileValidationRules?.max
       ? this.validateLengthFiles(files, listLoad)
       : files

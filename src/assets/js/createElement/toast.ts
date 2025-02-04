@@ -9,11 +9,14 @@ export class Toast {
     if (toast) {
       arrText.forEach((text) => {
         toast.insertAdjacentHTML(
-          'beforeend',
+          'afterbegin',
           ` <div class="toast__item" id="toast-${(idCount += 1)}" >
               <div class="toast__wrapper-item ${
                 IsSuccess ? '_success' : ''
-              }"> <span> ${text}</span></div>
+              }"> <span> ${text}</span>
+              <div class='toast__progress-row'></div>
+              </div>
+              
             </div>`,
         )
         this.removeToast(idCount)
@@ -29,7 +32,9 @@ export class Toast {
       item.remove()
     }, 10000)
     setTimeout(() => {
-      item.firstElementChild?.classList.add('_lineProgress')
+      item
+        .querySelector('.toast__progress-row')
+        ?.classList.add('_startProgress')
     }, 30)
   }
 }

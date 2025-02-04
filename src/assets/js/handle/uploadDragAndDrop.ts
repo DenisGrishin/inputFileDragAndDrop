@@ -12,11 +12,14 @@ export class UploadDragAndDrop {
   fileValidationRules
   constructor(
     listLoad: HTMLElement | null,
-    dropZoneSelector: string,
+    dropZoneSelector: string | undefined,
     fileValidationRules: fileValidationRules | undefined,
   ) {
     this.listLoad = listLoad
-    this.dropZone = document.querySelector(dropZoneSelector) as HTMLElement
+
+    this.dropZone = document.querySelector(
+      dropZoneSelector || '',
+    ) as HTMLElement
     this.fileValidationRules = fileValidationRules
     this.ValidateFiles = new ValidateFiles(this.fileValidationRules)
   }
