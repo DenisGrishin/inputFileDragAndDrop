@@ -4,6 +4,9 @@ export type typeObjProps = {
   fileListSelector: string
   dropZoneSelector?: string
   fileValidationRules?: fileValidationRules
+  toast?: {
+    durationTime?: number
+  }
 }
 export type fileValidationRules = {
   type?: string[]

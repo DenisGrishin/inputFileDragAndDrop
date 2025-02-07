@@ -63,17 +63,20 @@
 		}
 
 		&._success {
+			.toast__progress-row {
+				background-color: #0db25a;
+			}
 			&::before {
 				content: "";
 				background-image: url(../image/icon/done.svg);
 			}
-			&::after {
-				background-color: #0db25a;
-			}
+			// &::after {
+			// 	background-color: #0db25a;
+			// }
 		}
-		&._lineProgress::after {
-			width: 0px;
-		}
+		// &._lineProgress::after {
+		// 	width: 0px;
+		// }
 	}
 	&__progress-row {
 		position: absolute;
@@ -82,7 +85,7 @@
 		background-color: #e63946;
 		bottom: 0;
 		left: 0;
-		transition: width 10.3s ease-out 0s;
+
 		&._startProgress {
 			width: 0px;
 		}

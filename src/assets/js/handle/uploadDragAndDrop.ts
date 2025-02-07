@@ -10,16 +10,19 @@ export class UploadDragAndDrop {
   listLoad: HTMLElement | null
   dropZone: HTMLElement | null
   fileValidationRules
+  durationTime
   constructor(
     listLoad: HTMLElement | null,
     dropZoneSelector: string | undefined,
     fileValidationRules: fileValidationRules | undefined,
+    durationTime: number | undefined,
   ) {
     this.listLoad = listLoad
 
     this.dropZone = document.querySelector(
       dropZoneSelector || '',
     ) as HTMLElement
+    this.durationTime = durationTime
     this.fileValidationRules = fileValidationRules
     this.ValidateFiles = new ValidateFiles(this.fileValidationRules)
   }
@@ -61,7 +64,7 @@ export class UploadDragAndDrop {
 
       this.CreateListItem.createItem(newFiles)
 
-      this.toast.createToast(errors)
+      this.toast.createToast(errors, this.durationTime)
     }
   }
 

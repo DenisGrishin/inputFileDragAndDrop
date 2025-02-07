@@ -13,7 +13,7 @@ export default class FileInput {
   // парметры инпута
   fileInput: HTMLInputElement | null
   listLoad: HTMLElement | null
-
+  durationTime: number | undefined
   dropZoneSelector: string | undefined
   fileValidationRules: fileValidationRules | undefined
   // =====
@@ -29,9 +29,9 @@ export default class FileInput {
       objProps.inputSelector,
     ) as HTMLInputElement
     this.listLoad = document.querySelector(objProps.fileListSelector)
-
     this.dropZoneSelector = objProps.dropZoneSelector
     this.fileValidationRules = objProps.fileValidationRules
+    this.durationTime = objProps.toast?.durationTime
     // =====
     this.uploadFileList = null
     this.CreateListItem = new CreateListItem()
@@ -42,6 +42,7 @@ export default class FileInput {
       this.listLoad,
       this.dropZoneSelector,
       this.fileValidationRules,
+      this.durationTime,
     )
   }
 
@@ -70,7 +71,7 @@ export default class FileInput {
 
         this.CreateListItem.createItem(files)
 
-        this.toast.createToast(errors)
+        this.toast.createToast(errors, this.durationTime)
       } else {
         this.CreateListItem.createItem(Array.from(target.files))
       }
@@ -89,7 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
       max: 3,
       size: 3.5,
     },
-    // toast: {},
+    toast: {
+      durationTime: 3000,
+    },
   })
   fileInput.initInputFile()
 })
@@ -105,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 3.валидация по размеру, указывать в мб где 0,1 это 100кб
 // 4.валидация по вторению имени
 // сдлеать чтоб можно бло задвать тостом свои текста
-// 1. сдлеать саксес линию прогреса
+// 1. сдлеать style линию прогреса
 // 2. установливать таймер
+// 3. сделать чтоб ошибки собирались вы водилсиь
 // сдеалть чтоб списку более универсальный
