@@ -1,21 +1,24 @@
-import { fileValidationRules } from '../../../types/index.type'
+import { errorItem, fileValidationRules } from '../../../types/index.type'
 
 export default class ValidateFiles {
   errors: string[] = []
+  errorItem: errorItem[] = []
   fileValidationRules
   constructor(fileValidationRules: fileValidationRules | undefined) {
     this.fileValidationRules = fileValidationRules
   }
   initValidate = (files: any, listLoad: HTMLElement | Element) => {
-    if (files.length === 0) return []
     this.errors = []
+    this.errorItem = []
+    if (files.length === 0) return []
+
     const newFilesLenght = this.fileValidationRules?.max
       ? this.validateLengthFiles(files, listLoad)
       : files
 
     if (newFilesLenght.length === 0) return [[], this.errors]
 
-    const newFilesSize = this.fileValidationRules?.size
+    const newFilesSize = this.fileValidationRules?.maxFileSize
       ? this.validateSizeFiles(newFilesLenght)
       : files
 
@@ -27,7 +30,7 @@ export default class ValidateFiles {
 
     if (newFileTupe.length === 0) return [[], this.errors]
 
-    return [newFileTupe, this.errors]
+    return [newFileTupe, this.errors, this.errorItem]
   }
 
   validateLengthFiles = (files: any, listLoad: HTMLElement | Element) => {
@@ -35,6 +38,10 @@ export default class ValidateFiles {
     if (!maxLength) return files
 
     if (listLoad.children.length + files.length >= maxLength + 1) {
+      this.errorItem.push({
+        max: maxLength,
+        type: 'maxFileUploads',
+      })
       this.errors.push(
         `<b>Ошибка:</b> Превышено допустимое количество изображений: максимум ${maxLength}.`,
       )
@@ -62,6 +69,10 @@ export default class ValidateFiles {
     const newFiles = files
       .map((file: any) => {
         if (nameLoadFiles.includes(file.name)) {
+          this.errorItem.push({
+            nameFile: file.name,
+            type: 'duplicateName',
+          })
           this.errors.push(
             `<b>Ошибка:</b> Изображение с таким <b>${file.name}</b>  именем уже существует.`,
           )
@@ -75,15 +86,20 @@ export default class ValidateFiles {
   }
 
   validateSizeFiles = (files: any) => {
-    if (!this.fileValidationRules?.size) return files
-    const maxSizeBytes = this.fileValidationRules?.size * 1024 * 1024
+    if (!this.fileValidationRules) return files
+    if (!this.fileValidationRules.maxFileSize) return files
+    const maxSizeBytes = this.fileValidationRules.maxFileSize * 1024 * 1024
 
     const newFiles = files
       .map((file: any) => {
         if (file.size < maxSizeBytes) {
           return file
         }
-
+        this.errorItem.push({
+          nameFile: file.name,
+          size: maxSizeBytes,
+          type: 'maxFileSize',
+        })
         this.errors.push(
           `<b>Ошибка:</b> Файл <b>"${file.name}"</b>  не загружен: превышен размер изображения.`,
         )
@@ -104,6 +120,13 @@ export default class ValidateFiles {
         if (allowedTypes.includes(file.type)) {
           return file
         }
+
+        this.errorItem.push({
+          nameFile: file.name,
+          typeFile: file.type,
+          allowedFileTypes: allowedTypes,
+          type: 'typeFile',
+        })
         this.errors.push('<b>Ошибка:</b> Неверный формат файла.')
 
         return undefined

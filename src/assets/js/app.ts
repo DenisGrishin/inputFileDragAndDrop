@@ -8,6 +8,7 @@ import { HandleSubmit } from './handle/handleSubmit.ts'
 
 import { UploadDragAndDrop } from './handle/uploadDragAndDrop.ts'
 import { fileValidationRules, typeObjProps } from '../../types/index.type.ts'
+import { EventEmitter } from './common/EventEmitter.ts'
 
 export default class FileInput {
   // парметры инпута
@@ -16,13 +17,25 @@ export default class FileInput {
   durationTime: number | undefined
   dropZoneSelector: string | undefined
   fileValidationRules: fileValidationRules | undefined
+  errorItem = []
   // =====
+  event: Event | undefined
   uploadFileList: FileList | null
   CreateListItem: CreateListItem
   ValidateFiles: ValidateFiles
   toast: Toast
   removeListItem: RemoveListItem
   uploadDragAndDrop: UploadDragAndDrop
+  eventEmitter: EventEmitter
+  on = {}
+  // on = {
+  //   // События
+  //   beforeValidation: function () {},
+  //   afterValidation: function () {},
+  //   beforeListCreate: function () {},
+  //   afterListCreate: function () {},
+  //   finalEvent: function () {},
+  // }
   constructor(objProps: typeObjProps) {
     // парметры инпута
     this.fileInput = document.querySelector(
@@ -44,27 +57,44 @@ export default class FileInput {
       this.fileValidationRules,
       this.durationTime,
     )
-  }
+    this.eventEmitter = new EventEmitter()
+    this.on = {
+      // События
+      beforeValidation: objProps.on.beforeValidation
 
+      },
+      // afterValidation: function () {},
+      // beforeListCreate: function () {},
+      // afterListCreate: function () {},
+      // finalEvent: function () {},
+    }
+
+// this.eventEmitter.on('beforeValidation')
+  }
+  finalEvent = function (callBack: () => void) {
+    callBack()
+  }
   initInputFile = () => {
     if (this.fileInput) {
       this.fileInput.addEventListener('change', this.handleUploadFile)
     }
 
     this.removeListItem.reomoveListLoadItem()
+
     if (this.dropZoneSelector) {
       this.uploadDragAndDrop.initUploadDragAndDrop()
     }
   }
 
   handleUploadFile = (event: Event) => {
-    const target = event.target as HTMLInputElement
+    this.event = event
+    let target = event.target as HTMLInputElement
 
     if (target.files) {
       this.uploadFileList = target.files
 
       if (this.listLoad && this.fileValidationRules) {
-        const [files, errors] = this.ValidateFiles.initValidate(
+        const [files, errors, errorItem] = this.ValidateFiles.initValidate(
           Array.from(target.files),
           this.listLoad,
         )
@@ -77,6 +107,9 @@ export default class FileInput {
       }
     }
   }
+  get getErrorItem() {
+    return this.errorItem
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,14 +121,16 @@ document.addEventListener('DOMContentLoaded', () => {
       type: ['image/jpg', 'image/jpeg', 'image/png'],
       isNameDuplicate: true,
       max: 3,
-      size: 3.5,
+      maxFileSize: 3.5,
     },
     toast: {
       durationTime: 3000,
     },
+    on:{}
   })
   fileInput.initInputFile()
 })
+
 // ! add HandleSubmit
 //  делаем универсальный селктор
 // 1. пердача элемент инпута чтоб свой протсовить слектор
@@ -111,4 +146,5 @@ document.addEventListener('DOMContentLoaded', () => {
 // 1. сдлеать style линию прогреса
 // 2. установливать таймер
 // 3. сделать чтоб ошибки собирались вы водилсиь
+// 3.1 кол-во, повтрения имен,размер, типы
 // сдеалть чтоб списку более универсальный
